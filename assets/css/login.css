@@ -1,0 +1,94 @@
+.container2{
+    margin-top: 50px;
+}
+
+
+h1{
+    text-align: center;
+    color: gray;
+
+}
+.h1{
+    text-align: center;
+    color: gray;
+}
+.alert{
+    text-align: center;
+
+}
+.btn{
+    margin: 0 auto;
+    margin-left: 37%;
+}
+.form1{
+    margin-left:auto;
+    margin-right:auto;
+    width: 343px;
+    height: 365px;
+    padding:30px;
+    border: 1px solid rgba(0,0,0,.2);
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    background: rgba(0, 0, 0, 0.1); 
+    -moz-box-shadow: 0 0 13px 3px rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 13px 3px rgba(0,0,0,.5);
+    box-shadow: 0 0 13px 3px rgba(255,255,0,.5);
+    overflow: hidden; 
+
+}
+.form2{
+    
+    top:50px;
+}
+
+.div1{
+    position: relative;
+    top:50px;
+}
+
+h2{
+    position: relative;
+    top:30px;
+    text-align: center;
+}
+
+.pos{
+        position: relative;
+    top:50px;
+}
+.btn1{
+    margin: 0 auto;
+    height: 50px;
+    margin-top: 40px;
+}
+.btn2{
+    position: relative;
+    top:10px;
+}
+
+.btn-warning{
+    background-image: none;
+    background-color: orange;
+    border-style: solid;
+    border-color: orange;
+}
+
+.btn-warning:hover{
+    background-image: none;
+    background-color: black;
+    border-color: black;
+    border-style: solid;
+    box-shadow: 5px 5px 50px red;
+}
+
+.btn-danger:hover{
+    background-color: gray;
+    background-image: none;
+    border-color: orange;
+    border-style: solid;
+    box-shadow: 5px 5px 50px red;
+}
