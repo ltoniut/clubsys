@@ -1,0 +1,35 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 30px;
+  text-align: right;
+  background-color: #f5f5f5;
+}
+.catalogo, .nav-catalogo {
+	border-style: groove;
+	border-radius: 15px;
+}
+
+.catalogo {
+	margin-left: 0px;
+}
+
+.margen {
+	padding: 5px;
+}
+
+.success, .error {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 10px;
+}
