@@ -13,7 +13,7 @@
 		<?php echo validation_errors(); ?>
 		<?php echo form_open('usuarios/login','class="form-inline"'); ?>
 		<div class="form-group">
-			<input type="text" class="form-control" id="inputUsuario" name="nombre" placeholder='Nombre de usuario'>
+			<input type="text" class="form-control" id="inputUsuario" name="numeroSocio" placeholder='Número de socio'>
 		</div>
 		<div class="form-group">
 			<input type="password" class="form-control" id="inputPassword" name="password" placeholder='contraseña'>

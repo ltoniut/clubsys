@@ -16,7 +16,7 @@ class Usuarios_model extends CI_model {
 	}
 
 	public function get_usuarios() {
-		$this->db->select('id, CONCAT(nombres, " ", apellido) AS nombre, tipo');
+		$this->db->select('id, CONCAT(nombres, " ", apellido) AS nombre, tipo', false);
 		$this->db->from('usuario');
 		$query = $this->db->get();
 		return $query->result_array();
@@ -26,6 +26,16 @@ class Usuarios_model extends CI_model {
 		$this->db->select('id, nombres, tipo');
 		$this->db->from('usuario');
 		$this->db->where("id = '{$id}'");
+		$query = $this->db->get();
+		return $query->row_array();
+	}
+
+	public function login_usuario($data) {
+		$id = $data['id'];
+		$pass = $data['pass'];
+		$this->db->select('id, CONCAT(nombres, " ", apellido) AS nombre, tipo', false);
+		$this->db->from('usuario');
+		$this->db->where("id = '{$id}' AND hash = PASSWORD('{$pass}')");
 		$query = $this->db->get();
 		return $query->row_array();
 	}

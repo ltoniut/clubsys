@@ -11,7 +11,7 @@ class Usuarios extends CI_Controller {
 
 	private function _is_admin() {
 		if (!$this->session->userdata('is_admin'))
-			show_error('Usuario sin autorización.', 401);
+			show_error('Usuario sin autorización.', 403);
 	}
 
 	public function index() {
@@ -83,7 +83,7 @@ class Usuarios extends CI_Controller {
 	}
 
 	public function login() {
-		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
+		$this->form_validation->set_rules('numeroSocio', 'Número de socio', 'required');
 		$this->form_validation->set_rules('password', 'Contraseña', 'required');
 
 		if ($this->form_validation->run() === FALSE) {
@@ -92,12 +92,11 @@ class Usuarios extends CI_Controller {
 		else {
 			$nombre = $this->input->post('nombre');
 			$password = $this->input->post('password');
-			$usuario = $this->usuarios_model->get_usuario_nombre($nombre);
-			$hash = 'a';
+			$usuario = $this->usuarios_model->get_usuario_id($id);
 
 			if ($usuario) {
 				if (password_verify($password, $hash)) {
-					$this->_login(array('username' => $usuario['nombre'], 1));
+					$this->_login(array('numeroSocio' => $usuario['nombre'], 1));
 				}
 				else {
 					echo "constraseña incorrecta";
@@ -110,7 +109,7 @@ class Usuarios extends CI_Controller {
 	}
 
 	public function logout() {
-		$this->session->unset_userdata('username');
+		$this->session->unset_userdata('numeroSocio');
 		$this->session->sess_destroy();
 		redirect('home', 'refresh');
 	}
@@ -140,7 +139,17 @@ class Usuarios extends CI_Controller {
 		}
 	}
 
-	public function test() {         
+	#método para debugeo
+	public function test() {
+		$data = array(
+			'id' => 6,
+			'pass' => '1234'
+			);
+		$do = $this->usuarios_model->login_usuario($data);
+		if ($do)
+			echo json_encode($do);
+		else
+			echo "noooo";
 	}
 
 }
