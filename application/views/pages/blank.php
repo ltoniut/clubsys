@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SB Admin - Bootstrap Admin Template</title>
+    <?php $this->load->view('templates/head'); ?>
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <?php $this->load->view('templates/nav_admin'); ?>
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Blank Page
+                            <small>Subheading</small>
+                        </h1>
+                        <ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="#">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-file"></i> Blank Page
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <?php $this->load->view('templates/scripts'); ?>
+
+</body>
+
+</html>
