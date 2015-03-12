@@ -19,5 +19,7 @@
 					."').show();";
 			}
 			?>
+
+			$(<?php echo "'li > a[href=\"" . current_url() . "\"]'"; ?>).parent().addClass('active');
 		});	
 	</script>

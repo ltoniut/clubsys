@@ -8,7 +8,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">ClubSys</a>
+                <?php echo anchor('', 'Clubsys', array('class' => 'navbar-brand')); ?>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
@@ -118,13 +118,13 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li>
-                        <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <?php echo anchor('dashboard', '<i class="fa fa-fw fa-dashboard"></i> Dashboard'); ?>
                     </li>
                     <li>
-                        <a href="charts.html"><i class="fa fa-fw fa-users"></i> Socios</a>
+                        <?php echo anchor('socios', '<i class="fa fa-fw fa-users"></i> Socios'); ?>
                     </li>
                     <li>
-                        <a href="tables.html"><i class="fa fa-fw fa-calendar"></i> Actividades</a>
+                        <?php echo anchor('actividades', '<i class="fa fa-fw fa-calendar"></i> Actividades'); ?>
                     </li>
                     <li>
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>

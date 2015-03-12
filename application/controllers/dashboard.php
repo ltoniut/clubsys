@@ -1,9 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Blank extends CI_Controller {
+class Dashboard extends CI_Controller {
 
 	public function index() {
-		$this->load->view('pages/blank');
+		$this->load->view('pages/dashboard');
 	} 
 
 }
