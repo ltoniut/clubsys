@@ -1,11 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit ('No direct script access allowed');
-
 class Socios_model extends CI_model {
-
 	public function __construct() {
 		$this->load->database();
 	}
-
 	public function get_socios() {
 		$socios = array(
 			array(
