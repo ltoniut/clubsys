@@ -7,7 +7,11 @@
 			$instructor = $info[2];
 			$fecha = $info[3];
 
+
+			 $queryAgregar = $this->db->query('call agregar_actividad(' . $instructor . ', "'. $nombre . '", "' . $descripcion . '", "' . $fecha . '")');
+
 			$queryAgregar = $this->db->query('call agregar_actividad(' . $instructor . ', "'. $nombre . '", "' . $descripcion . '", "' . $fecha . ')');
+
 
 			if( FALSE === $queryAgregar ) {
 			    echo( "Error al agregar actividad.");
@@ -30,6 +34,8 @@
 			    echo( "Inclusión exitosa." );
 			}
 		}
+
+		 
 
 		public function NuevosHorarios($nombre, $implementacion) {
 			$this->db->insert('historial_horario')
