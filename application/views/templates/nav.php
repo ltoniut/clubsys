@@ -1,4 +1,5 @@
-	<nav class="navbar navbar-default">
+	 <!-- Navigation -->
+     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -12,9 +13,19 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li>
-						<?php echo anchor('home', 'Inicio'); ?>
+						<?php echo anchor('', 'Inicio'); ?>
+					</li>
+					<li>
+						<?php echo anchor('dashboard', 'Dashboard'); ?>
 					</li>
 				</ul>
+				<?php
+				if (!$this->session->userdata('username')):
+					echo anchor('usuarios/login', 'Iniciar sesión', 'class="btn btn-default navbar-btn"');
+				else:
+					echo anchor('usuarios/logout', 'Cerrar sesión', 'class="btn btn-default navbar-btn"');
+				endif; 
+				?>
 			</div>
 		</div>
 	</nav>

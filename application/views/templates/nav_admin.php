@@ -6,7 +6,7 @@
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>Fulano
+                    <span class="icon-bar"></span>
                 </button>
                 <?php echo anchor('', 'Clubsys', array('class' => 'navbar-brand')); ?>
             </div>
