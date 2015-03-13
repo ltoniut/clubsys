@@ -40,6 +40,12 @@
 
 			return $query;
 		}
+
+		public function DevolverInstructores() {
+			$query = $this->db->get('lista_instructores');
+
+			return $query;
+		}
 	}
 
 ?>
