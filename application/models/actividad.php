@@ -7,7 +7,7 @@
 			$instructor = $info[2];
 			$fecha = $info[3];
 
-			$queryAgregar = $this->db->query('call(agregar_actividad(' . $instructor . ', "'. $nombre . '", "' . $descripcion . '", "' . $fecha . '))');
+			$queryAgregar = $this->db->query('call agregar_actividad(' . $instructor . ', "'. $nombre . '", "' . $descripcion . '", "' . $fecha . ')');
 
 			if( FALSE === $queryAgregar ) {
 			    echo( "Error al agregar actividad.");
@@ -22,7 +22,7 @@
 			$llegada = $info[2];
 			$salida = $info[3];
 
-			$queryAgregar = $this->db->query('call(agregar_horario(' . $actividad . ', '. $dia . ', ' . $llegada . ', ' . $salida . '))');
+			$queryAgregar = $this->db->query('call agregar_horario("' . $actividad . '", "'. $dia . '", "' . $llegada . '", "' . $salida . '")');
 
 			if( FALSE === $queryAgregar ) {
 			    echo( "Error al agregar horario." );
