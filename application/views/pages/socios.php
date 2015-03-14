@@ -26,34 +26,12 @@
                                 <i class="fa fa-dashboard"></i>  <?php echo anchor('dashboard', 'Dashboard');?>
                             </li>
                             <li class="active">
-                                <i class="fa fa-users"></i> Socios
+                                <i class="fa fa-file"></i> Usuarios
                             </li>
                         </ol>
                     </div>
                 </div>
                 <!-- /.row -->
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalSocio">
-                  Agregar socio
-                </button>
-                <!-- Modal -->
-                <div class="modal fade" id="modalSocio" tabindex="-1" role="dialog" aria-labelledby="modalSocioLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="modalSocioLabel">Modal title</h4>
-                      </div>
-                      <div class="modal-body">
-                        ...
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 <div class="table-responsive">
                     <?php 
                     $this->table->set_heading(array('#', 'Tipo', 'Apellidos y nombres', 'Dirección', 'Fecha de nacimiento', 'Fecha de inscripción', ""));
@@ -65,7 +43,7 @@
                             $socios_item['Dirección'],
                             $socios_item['Fecha de nacimiento'],
                             $socios_item['Fecha de inscripción'],
-                            anchor("clientes/modificar", '<i class="glyphicon glyphicon-pencil"><span class="hidden-xs"> Modificar</span></i>', array('class' => 'btn btn-info')) ." ".
+                            anchor("clientes/modificar", '<i class="glyphicon glyphicon-pencil"><span class="hidden-xs"> Modificar</span></i>', array('onclick'=>"return confirm('¿Está seguro que desea eliminar X?')", 'class' => 'btn btn-info')) ." ".
                             anchor("clientes/eliminar", '<i class="glyphicon glyphicon-trash"><span class="hidden-xs"> Borrar</span></i>', array('onclick'=>"return confirm('¿Está seguro que desea eliminar X?')", 'class' => 'btn btn-danger'))
                             ));
                     }
