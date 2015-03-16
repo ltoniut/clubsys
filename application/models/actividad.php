@@ -1,5 +1,6 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit ('No direct script access allowed');
 	class Actividad extends CI_Model {
+
 		public function AgregarActividad($info) {
 			//Info = nombre, descripcion, fecha de inicio, id instructor, horarios(entrada, salida, dia)
 			$nombre = $info[0];
@@ -8,9 +9,8 @@
 			$fecha = $info[3];
 
 
-			 $queryAgregar = $this->db->query('call agregar_actividad(' . $instructor . ', "'. $nombre . '", "' . $descripcion . '", "' . $fecha . '")');
-
-			$queryAgregar = $this->db->query('call agregar_actividad(' . $instructor . ', "'. $nombre . '", "' . $descripcion . '", "' . $fecha . ')');
+		
+		$queryAgregar = $this->db->query('call agregar_actividad("'. $instructor .'", "'. $nombre . '", "' . $descripcion . '", "' . $fecha . '")');
 
 
 			if( FALSE === $queryAgregar ) {
@@ -38,19 +38,20 @@
 		 
 
 		public function NuevosHorarios($nombre, $implementacion) {
-			$this->db->insert('historial_horario')
+			$this->db->insert('historial_horario');
 		}
 
 		public function DevolverActividades() {
-			$query = $this->db->get('lista_actividades');
+			$query = $this->db->get('lista_actividad');
 
-			return $query;
+			return $query->result_array();
 		}
 
 		public function DevolverInstructores() {
 			$query = $this->db->get('lista_instructores');
 
-			return $query;
+
+			return $query->result_array();
 		}
 	}
 

@@ -11,13 +11,17 @@ class Actividades extends CI_Controller {
 	}	
 
 	public function index()
-	{
-		$this->load->view('pages/actividades');
+	{	
+
+		$this->load->model('actividad');
+		$datos['actividades']=$this->actividad->DevolverActividades();
+		$datos['instructores']=$this->actividad->DevolverInstructores();
+		$this->load->view('pages/actividades',$datos);
 	}
 
 	public function agregar(){
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('nombre','Nombre','required|is_unique(actividad.nombre)');
+		$this->form_validation->set_rules('nombre','Nombre','required|is_unique[actividad.nombre]');
 		$this->form_validation->set_rules('descripcion','Descripcion','required');
 		$this->form_validation->set_rules('fecha','Fecha','required');
 		#$this->form_validation->set_message('required','El campo %s es obligatorio');
@@ -31,12 +35,10 @@ class Actividades extends CI_Controller {
 			$instructor=$_POST['instructor'];
 
 			$data=array ('0'=>$nombre,'1'=>$descripcion,'2'=>$instructor,'3'=>$fecha);
-			print_r($data);die;
+
 			$this->load->model('actividad');
 			$this->actividad->AgregarActividad($data);
-			
 			$datos['actividades']=$this->actividad->DevolverActividades();
-			print_r($datos);die;
 			$datos['mensaje']='Actividad Agregada';
 
 			$this->load->view('pages/actividades',$datos);
@@ -45,10 +47,17 @@ class Actividades extends CI_Controller {
 		}
 		else
 		{
-			$datos['mensaje']=validation_errors();
+			$this->load->model('actividad');
+			$datos['actividades']=$this->actividad->DevolverActividades();	
 	
 			$this->load->view('pages/actividades',$datos);
 		}
+
+	}
+	public function mostrarActividades(){
+		$this->load->model('actividad');
+		$datos['actividades']=$this->actividad->DevolverActividades();
+		$this->load->view('pages/actividades',$datos);
 
 	}
 }
