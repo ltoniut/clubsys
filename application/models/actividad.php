@@ -42,7 +42,7 @@
 		}
 
 		public function DevolverActividades() {
-			$query = $this->db->get('lista_actividad');
+			$query = $this->db->get('lista_actividades');
 
 			return $query->result_array();
 		}

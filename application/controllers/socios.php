@@ -55,4 +55,10 @@ class Socios extends CI_Controller {
 				redirect('socios/index');
 			}
 		}
+
+		public function test($idTipo) {
+
+			$array = $this->socios_model->get_sociosxtipo($idTipo);
+			echo json_encode($array);
+		}
 	}
