@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-03-2015 a las 16:21:16
+-- Tiempo de generación: 19-03-2015 a las 13:09:36
 -- Versión del servidor: 5.6.20
 -- Versión de PHP: 5.5.15
 
@@ -131,13 +131,6 @@ CREATE TABLE IF NOT EXISTS `actividad_por_usuario` (
   `actividad_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
---
--- Volcado de datos para la tabla `actividad_por_usuario`
---
-
-INSERT INTO `actividad_por_usuario` (`fecha_inicio`, `fecha_finalizacion`, `usuario_id`, `actividad_id`) VALUES
-('2015-03-06 12:52:10', NULL, 6, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -171,6 +164,7 @@ CREATE TABLE IF NOT EXISTS `ci_sessions` (
 --
 
 INSERT INTO `ci_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
+('3e75736799cac95a4ce1972aeee84dc8', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36', 1426693701, ''),
 ('e908ece5150c307587a152785921738b', '::1', 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36', 1426605158, 'a:1:{s:15:"flash:new:error";s:353:"<div class="alert alert-danger" role="alert">El campo Nombres es obligatorio.</div>\n<div class="alert alert-danger" role="alert">El campo Apellidos es obligatorio.</div>\n<div class="alert alert-danger" role="alert">El campo Direcci?n es obligatorio.</div>\n<div class="alert alert-danger" role="alert">El campo Fecha de nacimiento es obligatorio.</div>\n";}');
 
 -- --------------------------------------------------------
@@ -184,62 +178,7 @@ CREATE TABLE IF NOT EXISTS `clase` (
   `actividad_id` int(11) NOT NULL,
   `fecha` date NOT NULL,
   `descripcion` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=ascii AUTO_INCREMENT=194 ;
-
---
--- Volcado de datos para la tabla `clase`
---
-
-INSERT INTO `clase` (`id`, `actividad_id`, `fecha`, `descripcion`) VALUES
-(41, 2, '2015-07-19', NULL),
-(42, 2, '2015-07-26', NULL),
-(43, 2, '2015-08-02', NULL),
-(44, 2, '2015-08-09', NULL),
-(45, 2, '2015-08-16', NULL),
-(46, 2, '2015-08-23', NULL),
-(47, 2, '2015-08-30', NULL),
-(48, 2, '2015-09-06', NULL),
-(49, 2, '2015-09-13', NULL),
-(50, 2, '2015-09-20', NULL),
-(51, 2, '2015-09-27', NULL),
-(52, 2, '2015-10-04', NULL),
-(53, 2, '2015-10-11', NULL),
-(54, 2, '2015-10-18', NULL),
-(55, 2, '2015-10-25', NULL),
-(56, 2, '2015-11-01', NULL),
-(57, 2, '2015-11-08', NULL),
-(58, 2, '2015-11-15', NULL),
-(59, 2, '2015-11-22', NULL),
-(60, 2, '2015-11-29', NULL),
-(61, 2, '2015-12-06', NULL),
-(62, 2, '2015-12-13', NULL),
-(63, 2, '2015-12-20', NULL),
-(64, 2, '2015-12-27', NULL),
-(65, 2, '2015-07-16', NULL),
-(66, 2, '2015-07-23', NULL),
-(67, 2, '2015-07-30', NULL),
-(68, 2, '2015-08-06', NULL),
-(69, 2, '2015-08-13', NULL),
-(70, 2, '2015-08-20', NULL),
-(71, 2, '2015-08-27', NULL),
-(72, 2, '2015-09-03', NULL),
-(73, 2, '2015-09-10', NULL),
-(74, 2, '2015-09-17', NULL),
-(75, 2, '2015-09-24', NULL),
-(76, 2, '2015-10-01', NULL),
-(77, 2, '2015-10-08', NULL),
-(78, 2, '2015-10-15', NULL),
-(79, 2, '2015-10-22', NULL),
-(80, 2, '2015-10-29', NULL),
-(81, 2, '2015-11-05', NULL),
-(82, 2, '2015-11-12', NULL),
-(83, 2, '2015-11-19', NULL),
-(84, 2, '2015-11-26', NULL),
-(85, 2, '2015-12-03', NULL),
-(86, 2, '2015-12-10', NULL),
-(87, 2, '2015-12-17', NULL),
-(88, 2, '2015-12-24', NULL),
-(89, 2, '2015-12-31', NULL);
+) ENGINE=InnoDB DEFAULT CHARSET=ascii AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -300,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `historial_horario` (
 `id` int(11) NOT NULL,
   `actividad_id` int(11) NOT NULL,
   `fecha_implementacion` date NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=ascii AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=ascii AUTO_INCREMENT=7 ;
 
 --
 -- Volcado de datos para la tabla `historial_horario`
@@ -349,27 +288,7 @@ CREATE TABLE IF NOT EXISTS `horario` (
   `hora_entrada` time NOT NULL,
   `hora_salida` time NOT NULL,
   `dia` tinyint(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci AUTO_INCREMENT=15 ;
-
---
--- Volcado de datos para la tabla `horario`
---
-
-INSERT INTO `horario` (`id`, `historial_id`, `hora_entrada`, `hora_salida`, `dia`) VALUES
-(1, 7, '13:00:00', '16:00:00', 9),
-(2, 7, '13:00:00', '15:00:00', 4),
-(3, 7, '03:00:00', '15:00:00', 6),
-(4, 7, '03:00:00', '15:00:00', 6),
-(5, 7, '03:00:00', '15:00:00', 6),
-(6, 7, '03:00:00', '15:00:00', 2),
-(7, 7, '03:00:00', '15:00:00', 6),
-(8, 7, '03:00:00', '15:00:00', 6),
-(9, 7, '03:00:00', '15:00:00', 6),
-(10, 7, '03:00:00', '15:00:00', 3),
-(11, 6, '03:00:00', '15:00:00', 6),
-(12, 6, '03:00:00', '15:00:00', 3),
-(13, 8, '03:00:00', '15:00:00', 2),
-(14, 8, '03:00:00', '15:00:00', 4);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -679,7 +598,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT de la tabla `clase`
 --
 ALTER TABLE `clase`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=194;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `comentario`
 --
@@ -694,7 +613,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT de la tabla `historial_horario`
 --
 ALTER TABLE `historial_horario`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `historial_precio`
 --
@@ -704,7 +623,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 -- AUTO_INCREMENT de la tabla `horario`
 --
 ALTER TABLE `horario`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `pago`
 --
