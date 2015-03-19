@@ -41,6 +41,15 @@ class Usuarios_model extends CI_model {
 	}
 
 	public function update_usuario($data) {
+		$info = array(
+           'tipo_id' => $data->tipo,
+           'nombres' => $data->$name,
+           'apellido' => $data->$apellido,
+           'direccion' => $data->$direccion,
+           'fecha_nacimiento' => $data->$nacimiento
+        );
 
+        $this->db->where('id', $data->id);
+		$this->db->update('usuario', $data); 
 	}
 }
