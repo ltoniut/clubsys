@@ -4,48 +4,30 @@ class Socios_model extends CI_model {
 		$this->load->database();
 	}
 	public function get_socios() {
-		$socios = array(
-			array(
-				'#' => 1,
-				'Tipo' => 'Instructor',
-				'Apellidos y nombres' => 'Facal, Julio',
-				'Dirección' => 'Perú 1819',
-				'Fecha de nacimiento' => '1989-09-18',
-				'Fecha de inscripción' => '2015-03-06 12:11:31'
-				),
-			array(
-				'#' => 2,
-				'Tipo' => 'Socio',
-				'Apellidos y nombres' => 'Fulanito, Cosme',
-				'Dirección' => 'Perú 1819',
-				'Fecha de nacimiento' => '1989-09-18',
-				'Fecha de inscripción' => '2015-03-06 12:11:31'
-				),
-			array(
-				'#' => 3,
-				'Tipo' => 'Socio',
-				'Apellidos y nombres' => 'Josefo, Joestrella',
-				'Dirección' => 'Perú 1819',
-				'Fecha de nacimiento' => '1989-09-18',
-				'Fecha de inscripción' => '2015-03-06 12:11:31'
-				),
-			array(
-				'#' => 4,
-				'Tipo' => 'Instructor',
-				'Apellidos y nombres' => 'Zeppeli, William',
-				'Dirección' => 'Perú 1819',
-				'Fecha de nacimiento' => '1989-09-18',
-				'Fecha de inscripción' => '2015-03-06 12:11:31'
-				),
-			array(
-				'#' => 5,
-				'Tipo' => 'Socio',
-				'Apellidos y nombres' => 'del Ocho, Chavo',
-				'Dirección' => 'Perú 1819',
-				'Fecha de nacimiento' => '1989-09-18',
-				'Fecha de inscripción' => '2015-03-06 12:11:31'
-				)
+		$query = $this->db->get('lista_usuarios');
+
+		return $query->result_array();
+	}
+
+	public function get_sociosxtipo($tipoId) {
+		$this->db->select('*');
+		$this->db->from('lista_usuarios');
+		$this->db->where("tipoId = {$tipoId}");
+		$query = $this->db->get();
+
+		return $query->result_array();
+	}
+
+	public function update_socio($data) {
+		$info = array(
+			'tipo_id' => $data->tipo,
+			'nombres' => $data->$name,
+			'apellido' => $data->$apellido,
+			'direccion' => $data->$direccion,
+			'fecha_nacimiento' => $data->$nacimiento
 			);
-		return $socios;
+
+		$this->db->where('id', $data->id);
+		$this->db->update('usuario', $data); 
 	}
 }

@@ -12,7 +12,7 @@ class Usuarios_model extends CI_model {
 		if ($this->db->affected_rows() > 0) 
 			return TRUE;
 		else
-		 	return FALSE;
+			return FALSE;
 	}
 
 	public function get_usuarios() {
@@ -38,9 +38,5 @@ class Usuarios_model extends CI_model {
 		$this->db->where("id = '{$id}' AND hash = PASSWORD('{$pass}')");
 		$query = $this->db->get();
 		return $query->row_array();
-	}
-
-	public function update_usuario($data) {
-
 	}
 }

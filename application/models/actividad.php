@@ -42,14 +42,16 @@
 		}
 
 		public function DevolverActividades() {
-			$query = $this->db->get('lista_actividad');
+			$query = $this->db->get('lista_actividades');
 
 			return $query->result_array();
 		}
 
 		public function DevolverInstructores() {
-			$query = $this->db->get('lista_instructores');
-
+			$this->db->select();
+			$this->db->from('lista_usuarios');
+			$this->db->where('tipoId = 3');
+			$query = $this->db->get();
 
 			return $query->result_array();
 		}
