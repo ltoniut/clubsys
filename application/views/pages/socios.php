@@ -36,7 +36,7 @@
                     <div class="col-sm-6 text-right">
                         <?php echo form_open('socios','class="form-inline role="search"'); ?>
                         <div class="input-group">
-                            <input type="search" class="form-control" placeholder="Buscar...">
+                            <input type="search" name="busqueda" class="form-control" placeholder="Buscar..." required>
                             <span class="input-group-btn">
                                 <button type="input" class="btn btn-default">
                                     <i class="glyphicon glyphicon-search"></i>
@@ -68,13 +68,14 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="selectTipo" class="col-sm-2 control-label" name="tipo">Tipo</label>
+                                        <label for="selectTipo" class="col-sm-2 control-label">Tipo</label>
                                         <div class="col-sm-10">
-                                            <select class="form-control" id="selectTipo">
-                                                <option>Socio</option>
-                                                <option>Instructor</option>
-                                                <option>Administrador</option>
-                                            </select>
+                                        <select name="tipo" class="form-control">
+                                            <?php foreach ($tipos as $tipo_item) {
+                                                echo "<option value=\"{$tipo_item['id']}\">{$tipo_item['nombre']}</option>";
+                                            }
+                                            ?>
+                                        </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -116,7 +117,7 @@
                                 '<button type="button" class="btn btn-info btn-block btnModificarSocio" data-toggle="modal" data-target="#modificarModal">
                                 <i class="glyphicon glyphicon-pencil"><span class="hidden-xs"> Modificar</span></i>
                             </button>'." ".
-                            anchor("socios/eliminar", '<i class="glyphicon glyphicon-trash"><span class="hidden-xs"> Borrar</span></i>', array('onclick'=>"return confirm('¿Está seguro que desea eliminar al socio {$socios_item['Apellidos y nombres']}?')", 'class' => 'btn btn-danger btn-sm btn-block', "role" => "button"))
+                            anchor("socios/eliminar/{$socios_item['#']}", '<i class="glyphicon glyphicon-trash"><span class="hidden-xs"> Borrar</span></i>', array('onclick'=>"return confirm('¿Está seguro que desea eliminar al socio {$socios_item['Apellidos y nombres']}?')", 'class' => 'btn btn-danger btn-sm btn-block', "role" => "button"))
                             ));
 }
 echo $this->table->generate();
@@ -135,49 +136,51 @@ echo $this->table->generate();
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modificarModalLabel">Agregar socio</h4>
+                <h4 class="modal-title" id="modificarModalLabel">Modificar socio</h4>
             </div>
-            <?php echo form_open('socios/agregar','class="form-horizontal"'); ?>
+            <?php echo form_open('socios/modificar','class="form-horizontal"'); ?>
             <div class="modal-body">
+                <input type="hidden" name="idMod" value="">
                 <div class="form-group">
-                    <label for="inputNombres" class="col-sm-2 control-label">Nombres</label>
+                    <label for="inputNombresMod" class="col-sm-2 control-label">Nombres</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputNombres" name="nombres" placeholder="Nombres">
+                        <input type="text" class="form-control" id="inputNombresMod" name="nombresMod" placeholder="Nombres">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputApellidos" class="col-sm-2 control-label">Apellidos</label>
+                    <label for="inputApellidosMod" class="col-sm-2 control-label">Apellidos</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputApellidos" name="apellidos" placeholder="Apellidos">
+                        <input type="text" class="form-control" id="inputApellidosMod" name="apellidosMod" placeholder="Apellidos">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="selectTipo" class="col-sm-2 control-label" name="tipo">Tipo</label>
+                    <label for="selectTipoMod" class="col-sm-2 control-label" name="tipoMod">Tipo</label>
                     <div class="col-sm-10">
-                        <select class="form-control" id="selectTipo">
-                            <option>Socio</option>
-                            <option>Instructor</option>
-                            <option>Administrador</option>
+                        <select class="form-control" name="tipo">
+                            <?php foreach ($tipos as $tipo_item) {
+                                echo "<option value=\"{$tipo_item['id']}\">{$tipo_item['nombre']}</option>";
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputDireccion" class="col-sm-2 control-label">Dirección</label>
+                    <label for="inputDireccionMod" class="col-sm-2 control-label">Dirección</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputDireccion" name="direccion" placeholder="Dirección">
+                        <input type="text" class="form-control" id="inputDireccionMod" name="direccionMod" placeholder="Dirección">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputFechaNacimiento" class="col-sm-2 control-label">Fecha de nacimiento</label>
+                    <label for="inputFechaNacimientoMod" class="col-sm-2 control-label">Fecha de nacimiento</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" id="inputFechaNacimiento" name="fechaNacimiento">
+                        <input type="date" class="form-control" id="inputFechaNacimientoMod" name="fechaNacimientoMod">
                     </div>
                 </div>
             </div>
             <!-- /.modal-body -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Agregar</button>
+                <button type="submit" class="btn btn-primary">Modificar</button>
             </div>
             <?php echo form_close(); ?>
         </div>
@@ -196,5 +199,22 @@ echo $this->table->generate();
 <!-- /#wrapper -->
 <?php $this->load->view('templates/footer'); ?>
 <?php $this->load->view('templates/scripts'); ?>
+<script>
+        $(document).ready(function() {
+            $(".btnModificarSocio").click(function() {
+                var tableData = $(this).closest("tr").children("td").map(function() {
+                    return $(this).text();
+                }).get();
+                var arr = tableData[2].split(', ');
+                $("#inputNombresMod").val($.trim(arr[0]));
+                $("#inputApellidosMod").val($.trim(arr[1]));
+                $("#inputDireccionMod").val($.trim(tableData[3]));
+                $("#inputFechaNacimientoMod").val($.trim(tableData[4]));
+                $("#selectTipoMod option").filter(function() {
+                    return($(this).text() == $.trim(tableData[1]))
+                }).prop('selected', true);
+            })
+        }); 
+    </script>
 </body>
 </html>
