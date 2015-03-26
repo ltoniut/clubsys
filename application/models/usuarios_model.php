@@ -12,7 +12,7 @@ class Usuarios_model extends CI_model {
 		if ($this->db->affected_rows() > 0) 
 			return TRUE;
 		else
-		 	return FALSE;
+			return FALSE;
 	}
 
 	public function get_usuarios() {

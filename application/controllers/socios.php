@@ -8,53 +8,106 @@ class Socios extends CI_Controller {
 		$this->form_validation->set_error_delimiters('<div class="alert alert-danger" role="alert">', '</div>');
 		$this->load->library('table');
 		$template = array('table_open' => "<table class='table table-condensed table-striped'");
-			$this->table->set_template($template);
+		$this->table->set_template($template);
+	}
+	public function index() {
+		$this->form_validation->set_rules('busqueda', 'Búsqueda', 'required|alpha_numeric');
+
+		if ($this->form_validation->run()) {
+			$string = $this->input->post('busqueda');
+			$data['socios'] = $this->socios_model->get_socios($string);
+
 		}
-		public function index() {
+		else {
 			$data['socios'] = $this->socios_model->get_socios();
-			$this->load->view('pages/socios', $data);
 		}
 
-		public function agregar() {
-			$config = array(
-	               array(
-	                     'field'   => 'nombres', 
-	                     'label'   => 'Nombres', 
-	                     'rules'   => 'required'
-	                  ),
-	               array(
-	                     'field'   => 'apellidos', 
-	                     'label'   => 'Apellidos', 
-	                     'rules'   => 'required'
-	                  ),
-	               array(
-	                     'field'   => 'direccion', 
-	                     'label'   => 'Dirección', 
-	                     'rules'   => 'required'
-	                  ),
-	               array(
-	                     'field'   => 'fechaNacimiento', 
-	                     'label'   => 'Fecha de nacimiento', 
-	                     'rules'   => 'required'
-	                )
-	            );
-	        $this->form_validation->set_rules($config);
+		$data['tipos'] = $this->socios_model->get_tipos();
+		$this->load->view('pages/socios', $data);
+	}
 
-	        if ($this->form_validation->run()) {
-	        	$detalles = array(
-					'nombres' => $this->input->post('nombres'),
-					'apellidos' => $this->input->post('apellidos'),
-					'tipo' => $this->input->post('tipo'),
-					'direccion' => $this->input->post('direccion'),
-					'fechaNacimiento' => $this->input->post('fechaNacimiento')
-					);
-				echo json_encode($detalles);
-			}
-			else {
-				$this->session->set_flashdata('error', validation_errors());
-				redirect('socios/index');
-			}
+	public function agregar() {
+		$config = array(
+			array(
+				'field'   => 'nombres', 
+				'label'   => 'Nombres', 
+				'rules'   => 'required'
+				),
+			array(
+				'field'   => 'apellidos', 
+				'label'   => 'Apellidos', 
+				'rules'   => 'required'
+				),
+			array(
+				'field'   => 'direccion', 
+				'label'   => 'Dirección', 
+				'rules'   => 'required'
+				),
+			array(
+				'field'   => 'fechaNacimiento', 
+				'label'   => 'Fecha de nacimiento', 
+				'rules'   => 'required'
+				)
+			);
+		$this->form_validation->set_rules($config);
+
+		if ($this->form_validation->run()) {
+			$detalles = array(
+				'nombres' => $this->input->post('nombres'),
+				'apellido' => $this->input->post('apellidos'),
+				'tipo' => $this->input->post('tipo'),
+				'direccion' => $this->input->post('direccion'),
+				'fechaNacimiento' => $this->input->post('fechaNacimiento')
+				);
+			
+			$this->socios_model->set_socios($detalles);
+			redirect('socios/index');
 		}
+		else {
+			$this->session->set_flashdata('error', validation_errors());
+			redirect('socios/index');
+		}
+	}
+
+	public function modificar() {
+		$config = array(
+			array(
+				'field'   => 'nombresMod', 
+				'label'   => 'Nombres', 
+				'rules'   => 'required'
+				),
+			array(
+				'field'   => 'apellidosMod', 
+				'label'   => 'Apellidos', 
+				'rules'   => 'required'
+				),
+			array(
+				'field'   => 'direccionMod', 
+				'label'   => 'Dirección', 
+				'rules'   => 'required'
+				),
+			array(
+				'field'   => 'fechaNacimientoMod', 
+				'label'   => 'Fecha de nacimiento', 
+				'rules'   => 'required'
+				)
+			);
+		$this->form_validation->set_rules($config);
+
+		if ($this->form_validation->run()) {
+			$detalles = array(
+				'id' => $this->input->post('inputIdMod'),
+				'nombres' => $this->input->post('nombresMod'),
+				'apellidos' => $this->input->post('apellidosMod'),
+				'tipo' => $this->input->post('tipoMod'),
+				'direccion' => $this->input->post('direccionMod'),
+				'nacimiento' => $this->input->post('fechaNacimientoMod')
+				);
+			echo json_encode($detalles);die;
+			$this->socios_model->update_socio($detalles);
+			redirect('socios/index');
+		}
+<<<<<<< HEAD
 
 		public function test($idTipo) {
 
@@ -62,3 +115,16 @@ class Socios extends CI_Controller {
 			echo json_encode($array);
 		}
 	}
+=======
+		else {
+			$this->session->set_flashdata('error', validation_errors());
+			redirect('socios/index');
+		}
+	}
+
+	public function eliminar($id) {
+		$this->socios_model->delete_socio($id);
+		redirect('socios/index');
+	}
+}
+>>>>>>> 2e970e5b1988e730882e8a742c910f6c99cc536b
