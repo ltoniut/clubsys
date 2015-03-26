@@ -26,7 +26,7 @@
                         </ol>
                     </div>
 
-                    <?php echo $this->session->flashdata('error'); ?>
+                    <?php echo $this->session->flashdata('error');?>
                     <div class="col-sm-6">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#socioModal">
@@ -140,13 +140,7 @@ echo $this->table->generate();
             </div>
             <?php echo form_open('socios/modificar','class="form-horizontal"'); ?>
             <div class="modal-body">
-                <input type="hidden" name="idMod" value="">
-                <div class="form-group">
-                    <label for="inputNombresMod" class="col-sm-2 control-label">Nombres</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputNombresMod" name="nombresMod" placeholder="Nombres">
-                    </div>
-                </div>
+                <input type="hidden" id="inputIdMod" name="idMod" value="">
                 <div class="form-group">
                     <label for="inputApellidosMod" class="col-sm-2 control-label">Apellidos</label>
                     <div class="col-sm-10">
@@ -154,9 +148,15 @@ echo $this->table->generate();
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="inputNombresMod" class="col-sm-2 control-label">Nombres</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputNombresMod" name="nombresMod" placeholder="Nombres">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="selectTipoMod" class="col-sm-2 control-label" name="tipoMod">Tipo</label>
                     <div class="col-sm-10">
-                        <select class="form-control" name="tipo">
+                        <select class="form-control" name="tipoMod">
                             <?php foreach ($tipos as $tipo_item) {
                                 echo "<option value=\"{$tipo_item['id']}\">{$tipo_item['nombre']}</option>";
                             }
@@ -205,9 +205,10 @@ echo $this->table->generate();
                 var tableData = $(this).closest("tr").children("td").map(function() {
                     return $(this).text();
                 }).get();
+                $("#inputIdMod").val($.trim(tableData[0]));
                 var arr = tableData[2].split(', ');
-                $("#inputNombresMod").val($.trim(arr[0]));
-                $("#inputApellidosMod").val($.trim(arr[1]));
+                $("#inputApellidosMod").val($.trim(arr[0]));
+                $("#inputNombresMod").val($.trim(arr[1]));
                 $("#inputDireccionMod").val($.trim(tableData[3]));
                 $("#inputFechaNacimientoMod").val($.trim(tableData[4]));
                 $("#selectTipoMod option").filter(function() {
