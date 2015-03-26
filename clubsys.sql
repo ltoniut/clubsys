@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-03-2015 a las 13:09:36
+-- Tiempo de generación: 26-03-2015 a las 15:38:44
 -- Versión del servidor: 5.6.20
 -- Versión de PHP: 5.5.15
 
@@ -43,6 +43,24 @@ BEGIN
     
     DELETE FROM `clase` WHERE clase.actividad_id = actividad
     AND clase.fecha > fecha_inicio;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `agregar_historial_precio`(IN `actividad` INT, IN `fecha_implementacion` DATE, IN `valor` DOUBLE)
+    NO SQL
+BEGIN
+
+IF actividad = 0 THEN
+	INSERT INTO  `historial_precio`(`fecha_implementacion`,
+    `actividad_id`, `valor`) 
+    VALUES (MAKEDATE(YEAR(fecha_implementacion),1), 0, valor);
+    
+ELSE
+	INSERT INTO `historial_precio`(`fecha_implementacion`,
+    `actividad_id`, `valor`) 
+    VALUES (month_first_day(fecha_implementacion), actividad, valor);
+    
+END IF;
 
 END$$
 
@@ -87,9 +105,87 @@ ORDER BY horario.id DESC LIMIT 1;
     SELECT WEEKDAY(@primerDia);
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `agregar_pagos`(IN `historial_id` DATE)
+    NO SQL
+BEGIN
+
+	SELECT @fecha := `fecha_implementacion` FROM historial_precio
+    WHERE id = historial_id;
+    SET @fecha_temporal = @fecha;
+    SELECT @precio := `valor` FROM historial_precio
+    WHERE id = historial_id;
+    SELECT @actividad := `actividad_id` FROM historial_precio
+    WHERE id = historial_id;
+    SELECT @ultimo_usuario := MAX(id) FROM usuario;
+    SET @id_actual := 1;
+    SET @usuario_actual := NULL;
+    
+    
+    IF @actividad = 0 THEN
+    	WHILE @id_actual <= @ultimo_usuario DO
+			IF EXISTS (SELECT * FROM `usuario`
+            WHERE id = @id_actual) THEN
+            	INSERT INTO `pago`
+                (`tipo`, `actividad_id`, `usuario`,
+                 `fecha`, `vencimiento`)
+                 VALUES (1 ,0, @id_actual, @fecha,
+                 DATE_ADD(@fecha, INTERVAL 6 MONTH));
+                 
+             END IF;
+             SET @id_actual = @id_actual + 1;
+         END WHILE;
+            
+    	
+    ELSE
+    	WHILE @id_actual <= @ultimo_usuario DO
+			IF EXISTS (SELECT * FROM `actividad_por_usuario`
+            WHERE usuario_id = @id_actual AND
+            actividad_id = @actividad) THEN
+            	WHILE YEAR(@fecha_temporal) = YEAR(@fecha) DO
+                    INSERT INTO `pago`
+                    (`tipo`, `actividad_id`, `usuario`,
+                     `fecha`, `vencimiento`)
+                     VALUES (1 ,0, @id_actual, @fecha,
+                     DATE_ADD(@fecha, INTERVAL 2 MONTH));
+                     
+                 	 SET @fecha_temporal := DATE_ADD(@fecha_temporal,
+                 	INTERVAL 1 MONTH);
+                 END WHILE;
+                 
+                 SET @fecha_temporal = @fecha;
+             END IF;
+             SET @id_actual = @id_actual + 1;
+         END WHILE;
+    
+    END IF;
+    
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `agregar_usuario`(IN `tipo` INT, IN `nombres` VARCHAR(150), IN `apellido` VARCHAR(100), IN `pass` VARCHAR(100), IN `direccion` VARCHAR(150), IN `nacimiento` DATE)
     NO SQL
-INSERT INTO `usuario`(`tipo_id`, `nombres`, `apellido`, `hash`, `direccion`, `fecha_nacimiento`) VALUES (tipo,nombres,apellido,PASSWORD(pass),direccion,nacimiento)$$
+INSERT INTO `usuario`(`tipo_id`, `nombres`, `apellido`, `password`, `direccion`, `fecha_nacimiento`) VALUES (tipo,nombres,apellido,PASSWORD(pass),direccion,nacimiento)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `desinscribir_a_actividad`(IN `actividad_id` INT, IN `usuario_id` INT)
+    NO SQL
+UPDATE `actividad_por_usuario` SET `fecha_finalizacion`=DATE(CURRENT_TIMESTAMP()) WHERE
+`actividad_id` = actividad_id AND `usuario_id` = usuario_id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `inscribir_a_actividad`(IN `usuario_id` INT, IN `actividad_id` INT)
+    NO SQL
+INSERT INTO `actividad_por_usuario`(`fecha_inicio`, `usuario_id`, `actividad_id`) VALUES (DATE(CURRENT_TIMESTAMP()),usuario_id,actividad_id)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `registrar_faltas`(IN `clase_id` INT)
+    NO SQL
+UPDATE `clase_por_usuario` SET `asistencia`=FALSE WHERE asistencia IS NULL$$
+
+--
+-- Funciones
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `month_first_day`(`day` DATE) RETURNS date
+    DETERMINISTIC
+BEGIN
+  RETURN ADDDATE(LAST_DAY(SUBDATE(day, INTERVAL 1 MONTH)), 1);
+END$$
 
 DELIMITER ;
 
@@ -125,7 +221,7 @@ INSERT INTO `actividad` (`id`, `instructor_id`, `nombre`, `descripcion`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `actividad_por_usuario` (
-  `fecha_inicio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fecha_inicio` date NOT NULL,
   `fecha_finalizacion` date DEFAULT NULL,
   `usuario_id` int(11) NOT NULL,
   `actividad_id` int(11) NOT NULL
@@ -189,8 +285,7 @@ CREATE TABLE IF NOT EXISTS `clase` (
 CREATE TABLE IF NOT EXISTS `clase_por_usuario` (
   `usuario_id` int(11) NOT NULL,
   `id_clase` int(11) NOT NULL,
-  `horario_llegada` time DEFAULT NULL,
-  `hora_salida` time DEFAULT NULL
+  `asistencia` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- --------------------------------------------------------
@@ -262,19 +357,20 @@ INSERT INTO `historial_horario` (`id`, `actividad_id`, `fecha_implementacion`) V
 CREATE TABLE IF NOT EXISTS `historial_precio` (
 `id` int(11) NOT NULL,
   `fecha_implementacion` date NOT NULL,
-  `tipo_pago` int(11) NOT NULL,
   `actividad_id` int(11) DEFAULT NULL,
   `valor` decimal(11,2) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=ascii AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=ascii AUTO_INCREMENT=9 ;
 
 --
 -- Volcado de datos para la tabla `historial_precio`
 --
 
-INSERT INTO `historial_precio` (`id`, `fecha_implementacion`, `tipo_pago`, `actividad_id`, `valor`) VALUES
-(1, '2015-01-01', 1, NULL, '1240.34'),
-(2, '2015-01-01', 2, NULL, '230.00'),
-(3, '2015-04-01', 2, NULL, '270.00');
+INSERT INTO `historial_precio` (`id`, `fecha_implementacion`, `actividad_id`, `valor`) VALUES
+(4, '2003-01-01', 3, '133.48'),
+(5, '2003-01-01', 3, '133.48'),
+(6, '2016-07-01', 3, '117.50'),
+(7, '2016-07-01', 5, '117.50'),
+(8, '2016-01-01', 0, '117.50');
 
 -- --------------------------------------------------------
 
@@ -315,16 +411,27 @@ CREATE TABLE IF NOT EXISTS `lista_clase` (
 -- --------------------------------------------------------
 
 --
+-- Estructura Stand-in para la vista `lista_participantes`
+--
+CREATE TABLE IF NOT EXISTS `lista_participantes` (
+`id usuario` int(11)
+,`id actividad` int(11)
+,`CONCAT(usuario.apellido, ', ', usuario.nombres)` varchar(202)
+,`fecha_inicio` date
+);
+-- --------------------------------------------------------
+
+--
 -- Estructura Stand-in para la vista `lista_usuarios`
 --
 CREATE TABLE IF NOT EXISTS `lista_usuarios` (
-`#` int(11)
-,`tipoId` int(11)
-,`Tipo` varchar(120)
-,`Apellidos y nombres` varchar(202)
-,`Dirección` varchar(100)
-,`Fecha de nacimiento` date
-,`Fecha de inscripción` date
+`usuario_id` int(11)
+,`tipo_id` int(11)
+,`tipo` varchar(30)
+,`nombre_completo` varchar(202)
+,`direccion` varchar(100)
+,`fecha_nacimiento` date
+,`fecha_inscripcion` date
 );
 -- --------------------------------------------------------
 
@@ -335,10 +442,10 @@ CREATE TABLE IF NOT EXISTS `lista_usuarios` (
 CREATE TABLE IF NOT EXISTS `pago` (
 `id` int(11) NOT NULL,
   `tipo` int(11) NOT NULL,
-  `actividad_id` int(11) DEFAULT NULL,
+  `actividad_id` int(11) NOT NULL,
   `tesorero` int(11) DEFAULT NULL,
   `usuario` int(11) NOT NULL,
-  `mes` date NOT NULL,
+  `fecha` date NOT NULL,
   `vencimiento` date NOT NULL,
   `fecha_abonado` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii AUTO_INCREMENT=1 ;
@@ -486,11 +593,20 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Estructura para la vista `lista_participantes`
+--
+DROP TABLE IF EXISTS `lista_participantes`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lista_participantes` AS select `usuario`.`id` AS `id usuario`,`actividad`.`id` AS `id actividad`,concat(`usuario`.`apellido`,', ',`usuario`.`nombres`) AS `CONCAT(usuario.apellido, ', ', usuario.nombres)`,`actividad_por_usuario`.`fecha_inicio` AS `fecha_inicio` from ((`actividad` join `actividad_por_usuario`) join `usuario` on(((`actividad`.`id` = `actividad_por_usuario`.`actividad_id`) and (`usuario`.`id` = `actividad_por_usuario`.`usuario_id`)))) where (`actividad_por_usuario`.`fecha_finalizacion` = NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura para la vista `lista_usuarios`
 --
 DROP TABLE IF EXISTS `lista_usuarios`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lista_usuarios` AS select `usuario`.`id` AS `#`,`tipo_usuario`.`id` AS `tipoId`,concat(ucase(left(`tipo_usuario`.`nombre`,1)),substr(`tipo_usuario`.`nombre`,2)) AS `Tipo`,concat(`usuario`.`apellido`,', ',`usuario`.`nombres`) AS `Apellidos y nombres`,`usuario`.`direccion` AS `Dirección`,`usuario`.`fecha_nacimiento` AS `Fecha de nacimiento`,cast(`usuario`.`hora_inscripcion` as date) AS `Fecha de inscripción` from (`usuario` join `tipo_usuario`) where (`usuario`.`tipo_id` = `tipo_usuario`.`id`);
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lista_usuarios` AS select `usuario`.`id` AS `usuario_id`,`usuario`.`tipo_id` AS `tipo_id`,`tipo_usuario`.`nombre` AS `tipo`,concat(`usuario`.`apellido`,', ',`usuario`.`nombres`) AS `nombre_completo`,`usuario`.`direccion` AS `direccion`,`usuario`.`fecha_nacimiento` AS `fecha_nacimiento`,cast(`usuario`.`hora_inscripcion` as date) AS `fecha_inscripcion` from (`usuario` join `tipo_usuario` on((`tipo_usuario`.`id` = `usuario`.`tipo_id`)));
 
 --
 -- Índices para tablas volcadas
@@ -500,13 +616,13 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Indices de la tabla `actividad`
 --
 ALTER TABLE `actividad`
- ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`), ADD KEY `fk_Instructor` (`instructor_id`);
 
 --
 -- Indices de la tabla `anuncio`
 --
 ALTER TABLE `anuncio`
- ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`), ADD KEY `fk_Usuario` (`usuario_id`);
 
 --
 -- Indices de la tabla `ci_sessions`
@@ -518,7 +634,7 @@ ALTER TABLE `ci_sessions`
 -- Indices de la tabla `clase`
 --
 ALTER TABLE `clase`
- ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`), ADD KEY `fk_ActividadClase` (`actividad_id`);
 
 --
 -- Indices de la tabla `comentario`
@@ -536,7 +652,7 @@ ALTER TABLE `etiqueta`
 -- Indices de la tabla `historial_horario`
 --
 ALTER TABLE `historial_horario`
- ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`), ADD KEY `fk_Actividad` (`actividad_id`);
 
 --
 -- Indices de la tabla `historial_precio`
@@ -548,7 +664,7 @@ ALTER TABLE `historial_precio`
 -- Indices de la tabla `horario`
 --
 ALTER TABLE `horario`
- ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`), ADD KEY `fk_HistorialHorario` (`historial_id`);
 
 --
 -- Indices de la tabla `pago`
@@ -578,7 +694,7 @@ ALTER TABLE `tipo_usuario`
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
- ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`), ADD KEY `fk_TipoUsuario` (`tipo_id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -618,7 +734,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 -- AUTO_INCREMENT de la tabla `historial_precio`
 --
 ALTER TABLE `historial_precio`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT de la tabla `horario`
 --
@@ -644,6 +760,46 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 ALTER TABLE `usuario`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `actividad`
+--
+ALTER TABLE `actividad`
+ADD CONSTRAINT `fk_Instructor` FOREIGN KEY (`instructor_id`) REFERENCES `usuario` (`id`);
+
+--
+-- Filtros para la tabla `anuncio`
+--
+ALTER TABLE `anuncio`
+ADD CONSTRAINT `fk_Usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`);
+
+--
+-- Filtros para la tabla `clase`
+--
+ALTER TABLE `clase`
+ADD CONSTRAINT `fk_ActividadClase` FOREIGN KEY (`actividad_id`) REFERENCES `actividad` (`id`);
+
+--
+-- Filtros para la tabla `historial_horario`
+--
+ALTER TABLE `historial_horario`
+ADD CONSTRAINT `fk_Actividad` FOREIGN KEY (`actividad_id`) REFERENCES `actividad` (`id`);
+
+--
+-- Filtros para la tabla `horario`
+--
+ALTER TABLE `horario`
+ADD CONSTRAINT `fk_HistorialHorario` FOREIGN KEY (`historial_id`) REFERENCES `historial_horario` (`id`);
+
+--
+-- Filtros para la tabla `usuario`
+--
+ALTER TABLE `usuario`
+ADD CONSTRAINT `fk_TipoUsuario` FOREIGN KEY (`tipo_id`) REFERENCES `tipo_usuario` (`id`);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

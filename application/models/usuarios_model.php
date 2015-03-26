@@ -22,8 +22,21 @@ class Usuarios_model extends CI_model {
 		return $query->result_array();
 	}
 
+	public function delete_usuario($id) {
+		$this->db->where('id', $id);
+		$this->db->delete('usuario'); 
+	}
+
+	public function get_usuarios_tipo($tipo) {
+		$this->db->select('id, CONCAT(nombres, " ", apellido) AS nombre, tipo', false);
+		$this->db->from('usuario');
+		$this->db->where("tipo = '{$tipo}'")
+		$query = $this->db->get();
+		return $query->result_array();
+	}
+
 	public function get_usuario_id($id) {
-		$this->db->select('id, nombres, tipo');
+		$this->db->select('id, CONCAT(nombres, " ", apellido) AS nombre, tipo');
 		$this->db->from('usuario');
 		$this->db->where("id = '{$id}'");
 		$query = $this->db->get();
