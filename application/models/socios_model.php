@@ -8,7 +8,7 @@ class Socios_model extends CI_model {
 		$query = $this->db->query("call agregar_usuario('{$detalles['tipo']}', '{$detalles['nombres']}', '{$detalles['apellido']}', '1234', '{$detalles['direccion']}', '{$detalles['fechaNacimiento']}')");
 	}
 
-	public function get_socios($string = FALSE) {
+	public function get_socios_nombre($string = FALSE) {
 		$query_string = "SELECT * FROM `lista_usuarios`";
 
 		if ($string) {
@@ -20,13 +20,22 @@ class Socios_model extends CI_model {
 		return $query->result_array();
 	}
 
-	public function get_sociosxtipo($tipoId) {
-		$this->db->select('*');
-		$this->db->from('lista_usuarios');
-		$this->db->where("tipo_id = {$tipoId}");
+	public function get_socios_tipo($tipo) {
+		$this->db->select('id, CONCAT(nombres, " ", apellido) AS nombre, tipo', false);
+		$this->db->from('usuario');
+		$this->db->where("tipo = '{$tipo}'")
 		$query = $this->db->get();
-
 		return $query->result_array();
+	}
+
+	public function login_socio($data) {
+		$id = $data['id'];
+		$pass = $data['pass'];
+		$this->db->select('id, CONCAT(nombres, " ", apellido) AS nombre, tipo', false);
+		$this->db->from('usuario');
+		$this->db->where("id = '{$id}' AND hash = PASSWORD('{$pass}')");
+		$query = $this->db->get();
+		return $query->row_array();
 	}
 
 	public function update_socio($data) {

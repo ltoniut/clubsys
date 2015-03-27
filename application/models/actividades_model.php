@@ -44,7 +44,7 @@
 				$entrada = $horario['entrada'];
 				$salida = $horario['salida'];
 
-				$sql = ("call agregar_horario({?, ?, ?, ?)");
+				$sql = ("call agregar_horario(?, ?, ?, ?)");
 
 
 				$this->db->query($sql, array($actividad, $dia, $entrada, $salida));
@@ -54,8 +54,6 @@
 		public function get_actividades() {
 			$query = $this->db->get('lista_actividades');
 			//chequear fecha de finalizacion
-
-
 
 			return $query->result_array();
 		}
@@ -68,6 +66,35 @@
 			else
 				return false;
 		}
+
+		public function get_usuarios_actividad($id) {
+			$query = $this->db->get_where('lista_participantes',array('id_actividad' => $id));
+			//chequear fecha de finalizacion
+
+			return $query->result_array();
+		}
+
+		public function get_actividades_usuario($id) {
+			$query = $this->db->get_where('lista_participantes',array('id_usuario' => $id));
+			//chequear fecha de finalizacion
+
+			return $query->result_array();
+		}
+
+		public function inscribir_actividad($usuario, $actividad) {
+			$sql = ("call inscribir_a_actividad(?, ?)");
+			$this->db->query($sql, array($usuario, $actividad));
+		}
+
+		public function desinscribir_actividad($usuario, $actividad) {
+			$sql = ("call desinscribir_a_actividad(?, ?)");
+			$this->db->query($sql, array($actividad, $usuario));
+		}
+
+		Actividad por usuario
+		Usuario por Actividad
+		inscribir a actividades
+		desinscribir a actividades
 	}
 
 ?>
