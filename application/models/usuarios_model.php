@@ -7,7 +7,17 @@ class Usuarios_model extends CI_model {
 	}
 
 	public function set_usuario($data) {
-		$this->db->query("CALL agregar_usuario('".$data['tipo']."','".$data['nombres']."','".$data['apellido']."','".$data['password']."','".$data['direccion']."','".$data['fechaNacimiento']."')");
+		$tipo = $data['tipo'];
+		$nombres = $data['nombres'];
+		$apellido = $data['apellido'];
+		$password = $data['password'];
+		$direccion = $data['direccion'];
+		$fechaNacimiento = $data['fechaNacimiento'];
+
+
+		$sql = ("CALL agregar_usuario(?,?,?,?,?,?)");
+
+		$this->db->query($sql, array($tipo, $nombres, $apellido, $password, $direccion, $fechaNacimiento));
 
 		if ($this->db->affected_rows() > 0) 
 			return TRUE;
@@ -35,12 +45,36 @@ class Usuarios_model extends CI_model {
 		return $query->result_array();
 	}
 
+	public function get_usuarios_nombre($string = FALSE) {
+		$query_string = "SELECT * FROM `lista_usuarios`";
+
+		if ($string) {
+			$query_string .= " WHERE `Apellidos y nombres` LIKE '%{$string}%'";
+		}
+
+		$query = $this->db->query($query_string);
+
+		return $query->result_array();
+	}
+
 	public function get_usuario_id($id) {
 		$this->db->select('id, CONCAT(nombres, " ", apellido) AS nombre, tipo');
 		$this->db->from('usuario');
 		$this->db->where("id = '{$id}'");
 		$query = $this->db->get();
 		return $query->row_array();
+	}
+
+	public function get_usuario_nombre($string = FALSE) {
+		$query_string = "SELECT * FROM `lista_usuarios`";
+
+		if ($string) {
+			$query_string .= " WHERE `Apellidos y nombres` LIKE '%{$string}%'";
+		}
+
+		$query = $this->db->query($query_string);
+
+		return $query->result_array();
 	}
 
 	public function login_usuario($data) {

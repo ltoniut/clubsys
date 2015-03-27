@@ -8,7 +8,9 @@
 			$instructor = $data->instructor;
 			$fecha = $data->fecha;
 
-			$queryAgregar = $this->db->query("call agregar_actividad({$instructor}, {$nombre},{$descripcion}, {$fecha})");
+			$sql = "call agregar_actividad(?, ?, ?, ?)";
+ 
+   			$queryAgregar = $this->db->query($sql, array($instructor, $nombre, $descripcion, $fecha));
  
 
 			if( FALSE === $queryAgregar ) {
@@ -18,23 +20,42 @@
 			}
 		}
 
+		public function update_actividad($data) {
+			$id = $data->id;
+			$nombre = $data->nombre;
+			$descripcion = $data->descripcion;
+			$instructor = $data->instructor;
+
+			$sql = "update `actividad` SET `instructor_id`= ?,`nombre`= ?,`descripcion`= ? WHERE `id` = $id";
+
+			$this->db->query($sql, array($instructor, $nombre, $descripcion));
+		}
+
 		public function set_historial_horario($actividad, $implementacion) {
-			$this->db->query("call agregar_historial_horario({$actividad}, {$implementacion})");
+			$sql = "call agregar_historial_horario(?, ?)";
+			$this->db->query($sql, array($actividad, $implementacion));
 		}
 
 		public function set_horarios($data) {
 			foreach ($data as $horario) {
-				$actividad = $horario->actividad;
-				$dia = $horario->dia;
-				$entrada = $horario->entrada;
-				$salida = $horario->salida;
+				$actividad = $horario['actividad'];
+				$dia = $horario['dia'];
+				$entrada = $horario['entrada'];
+				$salida = $horario['salida'];
 
-				$this->db->query("call agregar_horario({$actividad}, {$dia}, {$entrada}, {$salida})");
+				$sql = ("call agregar_horario({?, ?, ?, ?)");
+
+
+				$this->db->query($sql, array($actividad, $dia, $entrada, $salida));
 			}
 		}
 
 		public function get_actividades() {
 			$query = $this->db->get('lista_actividades');
+			//chequear fecha de finalizacion
+
+
+
 			return $query->result_array();
 		}
 

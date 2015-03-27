@@ -23,7 +23,7 @@ class Socios_model extends CI_model {
 	public function get_sociosxtipo($tipoId) {
 		$this->db->select('*');
 		$this->db->from('lista_usuarios');
-		$this->db->where("tipoId = {$tipoId}");
+		$this->db->where("tipo_id = {$tipoId}");
 		$query = $this->db->get();
 
 		return $query->result_array();
