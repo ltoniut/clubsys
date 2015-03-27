@@ -1,12 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit ('No direct script access allowed');
+
 	class Actividad extends CI_Model {
 
 		public function set_actividad($data) {
 			//Info = nombre, descripcion, fecha de inicio, id instructor, horarios(entrada, salida, dia)
-			$nombre = $data->nombre;
-			$descripcion = $data->descripcion;
-			$instructor = $data->instructor;
-			$fecha = $data->fecha;
+		$nombre = $data['nombre'];
+		$descripcion = $data['descripcion'];
+		$instructor = $data['instructor'];
+		$fecha = $data['fecha'];
 
 			$sql = "call agregar_actividad(?, ?, ?, ?)";
  
@@ -60,8 +61,12 @@
 		}
 
 		public function delete_actividad($id) {
-			$query = $this->db->delete('actividad', array('id' => $id));
-			return $this->db->affected_rows();
+			$this->db->delete('actividad', array('id' => $id));
+
+			if ($this->db->affected_rows() > 0)
+				return true;
+			else
+				return false;
 		}
 	}
 
