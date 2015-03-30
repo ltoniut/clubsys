@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-03-2015 a las 15:38:44
+-- Tiempo de generación: 30-03-2015 a las 14:52:27
 -- Versión del servidor: 5.6.20
 -- Versión de PHP: 5.5.15
 
@@ -197,7 +197,7 @@ DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS `actividad` (
 `id` int(11) NOT NULL,
-  `instructor_id` int(11) NOT NULL,
+  `instructor_id` int(11) DEFAULT NULL,
   `nombre` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   `descripcion` varchar(800) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=ascii AUTO_INCREMENT=7 ;
@@ -226,6 +226,14 @@ CREATE TABLE IF NOT EXISTS `actividad_por_usuario` (
   `usuario_id` int(11) NOT NULL,
   `actividad_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
+
+--
+-- Volcado de datos para la tabla `actividad_por_usuario`
+--
+
+INSERT INTO `actividad_por_usuario` (`fecha_inicio`, `fecha_finalizacion`, `usuario_id`, `actividad_id`) VALUES
+('2015-03-27', NULL, 2, 4),
+('2015-03-27', NULL, 3, 3);
 
 -- --------------------------------------------------------
 
@@ -261,6 +269,7 @@ CREATE TABLE IF NOT EXISTS `ci_sessions` (
 
 INSERT INTO `ci_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
 ('3e75736799cac95a4ce1972aeee84dc8', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36', 1426693701, ''),
+('5a9528dfd79540b358c587294621f3de', '::1', 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36', 1427383703, ''),
 ('e908ece5150c307587a152785921738b', '::1', 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36', 1426605158, 'a:1:{s:15:"flash:new:error";s:353:"<div class="alert alert-danger" role="alert">El campo Nombres es obligatorio.</div>\n<div class="alert alert-danger" role="alert">El campo Apellidos es obligatorio.</div>\n<div class="alert alert-danger" role="alert">El campo Direcci?n es obligatorio.</div>\n<div class="alert alert-danger" role="alert">El campo Fecha de nacimiento es obligatorio.</div>\n";}');
 
 -- --------------------------------------------------------
@@ -274,7 +283,38 @@ CREATE TABLE IF NOT EXISTS `clase` (
   `actividad_id` int(11) NOT NULL,
   `fecha` date NOT NULL,
   `descripcion` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=ascii AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=ascii AUTO_INCREMENT=26 ;
+
+--
+-- Volcado de datos para la tabla `clase`
+--
+
+INSERT INTO `clase` (`id`, `actividad_id`, `fecha`, `descripcion`) VALUES
+(1, 2, '2015-07-16', NULL),
+(2, 2, '2015-07-23', NULL),
+(3, 2, '2015-07-30', NULL),
+(4, 2, '2015-08-06', NULL),
+(5, 2, '2015-08-13', NULL),
+(6, 2, '2015-08-20', NULL),
+(7, 2, '2015-08-27', NULL),
+(8, 2, '2015-09-03', NULL),
+(9, 2, '2015-09-10', NULL),
+(10, 2, '2015-09-17', NULL),
+(11, 2, '2015-09-24', NULL),
+(12, 2, '2015-10-01', NULL),
+(13, 2, '2015-10-08', NULL),
+(14, 2, '2015-10-15', NULL),
+(15, 2, '2015-10-22', NULL),
+(16, 2, '2015-10-29', NULL),
+(17, 2, '2015-11-05', NULL),
+(18, 2, '2015-11-12', NULL),
+(19, 2, '2015-11-19', NULL),
+(20, 2, '2015-11-26', NULL),
+(21, 2, '2015-12-03', NULL),
+(22, 2, '2015-12-10', NULL),
+(23, 2, '2015-12-17', NULL),
+(24, 2, '2015-12-24', NULL),
+(25, 2, '2015-12-31', NULL);
 
 -- --------------------------------------------------------
 
@@ -333,20 +373,21 @@ CREATE TABLE IF NOT EXISTS `etiqueta_por_anuncio` (
 CREATE TABLE IF NOT EXISTS `historial_horario` (
 `id` int(11) NOT NULL,
   `actividad_id` int(11) NOT NULL,
-  `fecha_implementacion` date NOT NULL
+  `fecha_implementacion` date NOT NULL,
+  `fecha_finalizacion` date DEFAULT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=ascii AUTO_INCREMENT=7 ;
 
 --
 -- Volcado de datos para la tabla `historial_horario`
 --
 
-INSERT INTO `historial_horario` (`id`, `actividad_id`, `fecha_implementacion`) VALUES
-(1, 3, '2015-05-01'),
-(2, 4, '2015-03-12'),
-(3, 5, '2015-03-12'),
-(4, 6, '2015-03-12'),
-(5, 1, '2015-04-14'),
-(6, 2, '2015-07-14');
+INSERT INTO `historial_horario` (`id`, `actividad_id`, `fecha_implementacion`, `fecha_finalizacion`) VALUES
+(1, 3, '2015-05-01', NULL),
+(2, 4, '2015-03-12', NULL),
+(3, 5, '2015-03-12', NULL),
+(4, 6, '2015-03-12', NULL),
+(5, 1, '2015-04-14', NULL),
+(6, 2, '2015-07-14', NULL);
 
 -- --------------------------------------------------------
 
@@ -384,7 +425,14 @@ CREATE TABLE IF NOT EXISTS `horario` (
   `hora_entrada` time NOT NULL,
   `hora_salida` time NOT NULL,
   `dia` tinyint(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci AUTO_INCREMENT=2 ;
+
+--
+-- Volcado de datos para la tabla `horario`
+--
+
+INSERT INTO `horario` (`id`, `historial_id`, `hora_entrada`, `hora_salida`, `dia`) VALUES
+(1, 6, '08:30:00', '10:30:00', 3);
 
 -- --------------------------------------------------------
 
@@ -393,9 +441,11 @@ CREATE TABLE IF NOT EXISTS `horario` (
 --
 CREATE TABLE IF NOT EXISTS `lista_actividades` (
 `id` int(11)
-,`instructor` varchar(202)
+,`CONCAT(usuario.apellido, ', ', usuario.nombres)` varchar(202)
 ,`nombre` varchar(30)
 ,`descripcion` varchar(800)
+,`fecha_inicio` date
+,`fecha_finalizacion` date
 );
 -- --------------------------------------------------------
 
@@ -414,10 +464,10 @@ CREATE TABLE IF NOT EXISTS `lista_clase` (
 -- Estructura Stand-in para la vista `lista_participantes`
 --
 CREATE TABLE IF NOT EXISTS `lista_participantes` (
-`id usuario` int(11)
-,`id actividad` int(11)
-,`CONCAT(usuario.apellido, ', ', usuario.nombres)` varchar(202)
-,`fecha_inicio` date
+`id_usuario` int(11)
+,`id_actividad` int(11)
+,`nombre_actividad` varchar(30)
+,`participante` varchar(202)
 );
 -- --------------------------------------------------------
 
@@ -579,7 +629,7 @@ INSERT INTO `usuario` (`id`, `tipo_id`, `nombres`, `apellido`, `password`, `dire
 --
 DROP TABLE IF EXISTS `lista_actividades`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lista_actividades` AS select `actividad`.`id` AS `id`,concat(`usuario`.`apellido`,', ',`usuario`.`nombres`) AS `instructor`,`actividad`.`nombre` AS `nombre`,`actividad`.`descripcion` AS `descripcion` from (`actividad` join `usuario` on((`actividad`.`instructor_id` = `usuario`.`id`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lista_actividades` AS select `actividad`.`id` AS `id`,concat(`usuario`.`apellido`,', ',`usuario`.`nombres`) AS `CONCAT(usuario.apellido, ', ', usuario.nombres)`,`actividad`.`nombre` AS `nombre`,`actividad`.`descripcion` AS `descripcion`,max(`historial_horario`.`fecha_implementacion`) AS `fecha_inicio`,`historial_horario`.`fecha_finalizacion` AS `fecha_finalizacion` from ((`actividad` left join `usuario` on((`actividad`.`instructor_id` = `usuario`.`id`))) left join `historial_horario` on((`historial_horario`.`actividad_id` = `actividad`.`id`))) group by `actividad`.`id`;
 
 -- --------------------------------------------------------
 
@@ -597,7 +647,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `lista_participantes`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lista_participantes` AS select `usuario`.`id` AS `id usuario`,`actividad`.`id` AS `id actividad`,concat(`usuario`.`apellido`,', ',`usuario`.`nombres`) AS `CONCAT(usuario.apellido, ', ', usuario.nombres)`,`actividad_por_usuario`.`fecha_inicio` AS `fecha_inicio` from ((`actividad` join `actividad_por_usuario`) join `usuario` on(((`actividad`.`id` = `actividad_por_usuario`.`actividad_id`) and (`usuario`.`id` = `actividad_por_usuario`.`usuario_id`)))) where (`actividad_por_usuario`.`fecha_finalizacion` = NULL);
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lista_participantes` AS select `usuario`.`id` AS `id_usuario`,`actividad`.`id` AS `id_actividad`,`actividad`.`nombre` AS `nombre_actividad`,concat(`usuario`.`apellido`,', ',`usuario`.`nombres`) AS `participante` from ((`usuario` join `actividad_por_usuario`) join `actividad` on(((`actividad_por_usuario`.`usuario_id` = `usuario`.`id`) and (`actividad_por_usuario`.`actividad_id` = `actividad`.`id`))));
 
 -- --------------------------------------------------------
 
@@ -714,7 +764,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT de la tabla `clase`
 --
 ALTER TABLE `clase`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT de la tabla `comentario`
 --
@@ -739,7 +789,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 -- AUTO_INCREMENT de la tabla `horario`
 --
 ALTER TABLE `horario`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `pago`
 --

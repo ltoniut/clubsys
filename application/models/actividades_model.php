@@ -90,11 +90,6 @@
 			$sql = ("call desinscribir_a_actividad(?, ?)");
 			$this->db->query($sql, array($actividad, $usuario));
 		}
-
-		Actividad por usuario
-		Usuario por Actividad
-		inscribir a actividades
-		desinscribir a actividades
 	}
 
 ?>
